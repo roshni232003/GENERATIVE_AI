@@ -1,0 +1,64 @@
+!pip install diffusers transformers accelerate scipy
+
+## Load Stable Diffusion Model
+
+### Subtask:
+Initialize the Stable Diffusion pipeline and move it to the GPU if available.
+
+
+### Loading the Stable Diffusion Model
+
+In this step, we will:
+1.  **Detect the hardware**: Check if a GPU (CUDA) is available to accelerate image generation. If not, we fall back to the CPU.
+2.  **Configure Precision**: Use `fp16` (half-precision) when running on a GPU to reduce memory usage and increase speed.
+3.  **Initialize the Pipeline**: Load the weights for `runwayml/stable-diffusion-v1-5` into the `StableDiffusionPipeline`.
+4.  **Transfer to Device**: Move the entire model pipeline to the selected device.
+
+**Reasoning**:
+I will initialize the Stable Diffusion pipeline by importing the necessary libraries, detecting the available device (GPU or CPU), setting the appropriate data type for memory optimization, and loading the model weights from Hugging Face.
+
+
+
+import torch
+from diffusers import StableDiffusionPipeline
+
+# Define the model identifier
+model_id = "runwayml/stable-diffusion-v1-5"
+
+# Check for GPU availability and set device and dtype
+device = "cuda" if torch.cuda.is_available() else "cpu"
+torch_dtype = torch.float16 if device == "cuda" else torch.float32
+
+print(f"Using device: {device} with dtype: {torch_dtype}")
+
+# Load the pipeline
+pipe = StableDiffusionPipeline.from_pretrained(
+    model_id,
+    torch_dtype=torch_dtype
+)
+
+# Move the pipeline to the device
+pipe = pipe.to(device)
+
+print("Stable Diffusion model loaded successfully.")
+
+**Reasoning**:
+With the Stable Diffusion pipeline successfully loaded, I will now define a descriptive text prompt and use the pipeline to generate an image. I will also save and display the result.
+
+
+
+# Define the prompt for the image you want to generate
+prompt = "A futuristic city with cars at sunset between the mountians and above the ocean, highly detailed, cinematic lighting, realistic art art"
+
+print(f"Generating image for prompt: {prompt}")
+
+# Generate the image
+# Note: On a CPU environment, this may take several minutes.
+# num_inference_steps is set to 25 to balance speed and quality.
+image = pipe(prompt, num_inference_steps=25).images[0]
+
+# Save the generated image
+image.save("generated_image.png")
+
+# Display the image in the notebook
+display(image)
