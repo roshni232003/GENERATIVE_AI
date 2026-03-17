@@ -1,24 +1,5 @@
 !pip install diffusers transformers accelerate scipy
 
-## Load Stable Diffusion Model
-
-### Subtask:
-Initialize the Stable Diffusion pipeline and move it to the GPU if available.
-
-
-### Loading the Stable Diffusion Model
-
-In this step, we will:
-1.  **Detect the hardware**: Check if a GPU (CUDA) is available to accelerate image generation. If not, we fall back to the CPU.
-2.  **Configure Precision**: Use `fp16` (half-precision) when running on a GPU to reduce memory usage and increase speed.
-3.  **Initialize the Pipeline**: Load the weights for `runwayml/stable-diffusion-v1-5` into the `StableDiffusionPipeline`.
-4.  **Transfer to Device**: Move the entire model pipeline to the selected device.
-
-**Reasoning**:
-I will initialize the Stable Diffusion pipeline by importing the necessary libraries, detecting the available device (GPU or CPU), setting the appropriate data type for memory optimization, and loading the model weights from Hugging Face.
-
-
-
 import torch
 from diffusers import StableDiffusionPipeline
 
